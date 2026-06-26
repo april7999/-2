@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 打卡小伙伴 - 情侣好友报备神器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 背景装饰 -->
+        <div class="bg-decoration">
+            <span class="bg-emoji" style="top:10%;left:5%">✨</span>
+            <span class="bg-emoji" style="top:20%;right:8%">💕</span>
+            <span class="bg-emoji" style="top:60%;left:3%">🌸</span>
+            <span class="bg-emoji" style="top:80%;right:5%">⭐</span>
+        </div>
+
+        <!-- 设置页面 -->
+        <section class="setup-page" id="setupPage">
+            <div class="setup-card">
+                <div class="setup-header">
+                    <span class="setup-emoji">🌟</span>
+                    <h1>打卡小伙伴</h1>
+                    <p>和TA一起，记录每一个瞬间</p>
+                </div>
+                
+                <div class="setup-form">
+                    <div class="input-cute">
+                        <label>📝 你的名字</label>
+                        <input type="text" id="myName" placeholder="比如：小可爱" maxlength="8">
+                    </div>
+                    
+                    <div class="input-cute">
+                        <label>💕 TA的名字</label>
+                        <input type="text" id="partnerName" placeholder="比如：大笨蛋（可选）" maxlength="8">
+                    </div>
+                    
+                    <div class="mode-select">
+                        <label>🎯 选择打卡模式</label>
+                        <div class="mode-grid" id="modeGrid">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <button class="btn-start" onclick="startApp()">
+                        <span>🚀</span> 开始打卡之旅
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主应用页面 -->
+        <main class="main-app" id="mainApp" style="display:none;">
+            <!-- 顶部导航 -->
+            <header class="app-header">
+                <div class="header-greeting">
+                    <span class="greeting-emoji" id="headerEmoji">🌅</span>
+                    <div class="greeting-text">
+                        <span id="greetingText">早安</span>
+                        <span class="user-name" id="displayName">小可爱</span>
+                    </div>
+                </div>
+                <div class="header-date" id="headerDate"></div>
+            </header>
+
+            <!-- 今日概览 -->
+            <section class="overview-card">
+                <div class="overview-header">
+                    <span class="overview-icon" id="modeIcon">💧</span>
+                    <div class="overview-info">
+                        <h2 id="modeTitle">喝水打卡</h2>
+                        <p id="modeDesc">今日 hydrated 进度</p>
+                    </div>
+                </div>
+                
+                <div class="progress-ring-container">
+                    <svg class="progress-ring" viewBox="0 0 120 120">
+                        <circle class="progress-ring-bg" cx="60" cy="60" r="54"/>
+                        <circle class="progress-ring-fill" id="progressRing" cx="60" cy="60" r="54"/>
+                    </svg>
+                    <div class="progress-text">
+                        <span class="progress-number" id="progressNum">0</span>
+                        <span class="progress-total" id="progressTotal">/8</span>
+                    </div>
+                </div>
+                
+                <div class="streak-display">
+                    <span class="streak-fire">🔥</span>
+                    <span>连续 <strong id="streakCount">0</strong> 天</span>
+                </div>
+            </section>
+
+            <!-- 快捷打卡 -->
+            <section class="quick-actions">
+                <h3 class="section-title">
+                    <span>⚡</span> 快捷打卡
+                </h3>
+                <div class="action-buttons">
+                    <button class="action-btn main-action" id="mainActionBtn" onclick="mainCheckIn()">
+                        <span class="action-emoji" id="mainActionEmoji">💧</span>
+                        <span class="action-text" id="mainActionText">喝水打卡</span>
+                        <span class="action-sub" id="mainActionSub">+1</span>
+                    </button>
+                    <button class="action-btn secondary-action" onclick="showCheckInModal()">
+                        <span class="action-emoji">📢</span>
+                        <span class="action-text">报备一下</span>
+                        <span class="action-sub">在干嘛</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 场景打卡 -->
+            <section class="scene-section">
+                <div class="scene-header">
+                    <h3 class="section-title">
+                        <span>🎭</span> 场景打卡
+                    </h3>
+                    <button class="btn-icon-only" onclick="toggleSceneEdit()" title="自定义场景">⚙️</button>
+                </div>
+                
+                <div class="scene-tabs" id="sceneTabs">
+                    <!-- 动态生成 -->
+                </div>
+                
+                <div class="scene-grid" id="sceneGrid">
+                    <!-- 动态生成 -->
+                </div>
+            </section>
+
+            <!-- 今日时间线 -->
+            <section class="timeline-section">
+                <h3 class="section-title">
+                    <span>📜</span> 今日动态
+                </h3>
+                <div class="timeline" id="timeline">
+                    <!-- 动态生成 -->
+                </div>
+            </section>
+
+            <!-- 数据操作 -->
+            <section class="data-section">
+                <h3 class="section-title">
+                    <span>💾</span> 数据管理
+                </h3>
+                <div class="data-buttons">
+                    <button class="btn-data" onclick="exportData()">
+                        <span>📤</span> 导出数据
+                    </button>
+                    <button class="btn-data" onclick="showImportModal()">
+                        <span>📥</span> 导入数据
+                    </button>
+                    <button class="btn-data" onclick="shareWithPartner()">
+                        <span>🔗</span> 分享给TA
+                    </button>
+                </div>
+            </section>
+
+            <!-- 设置按钮 -->
+            <button class="fab-settings" onclick="showSettings()">
+                <span>⚙️</span>
+            </button>
+        </main>
+
+        <!-- 报备弹窗 -->
+        <div class="modal" id="checkInModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📢 报备一下</h3>
+                    <button class="modal-close" onclick="closeModal('checkInModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="category-tabs" id="categoryTabs">
+                        <!-- 动态生成 -->
+                    </div>
+                    <div class="checkin-grid" id="checkinGrid">
+                        <!-- 动态生成 -->
+                    </div>
+                    <div class="custom-checkin">
+                        <input type="text" id="customCheckInText" placeholder="自定义报备内容..." maxlength="30">
+                        <button onclick="customCheckIn()">报备</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置弹窗 -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>⚙️ 设置</h3>
+                    <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <label>修改名字</label>
+                        <input type="text" id="editMyName" maxlength="8">
+                    </div>
+                    <div class="setting-item">
+                        <label>修改TA的名字</label>
+                        <input type="text" id="editPartnerName" maxlength="8">
+                    </div>
+                    <div class="setting-item">
+                        <label>切换模式</label>
+                        <select id="modeSelect" onchange="changeMode(this.value)">
+                            <!-- 动态生成 -->
+                        </select>
+                    </div>
+                    <div class="setting-actions">
+                        <button class="btn-primary" onclick="saveSettings()">保存</button>
+                        <button class="btn-danger" onclick="clearAllData()">清除所有数据</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导入弹窗 -->
+        <div class="modal" id="importModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📥 导入数据</h3>
+                    <button class="modal-close" onclick="closeModal('importModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <p class="import-hint">粘贴TA分享给你的数据代码：</p>
+                    <textarea id="importDataText" placeholder="在这里粘贴数据..."></textarea>
+                    <button class="btn-primary" onclick="importData()">导入</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 场景编辑弹窗 -->
+        <div class="modal" id="sceneEditModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🎨 自定义场景</h3>
+                    <button class="modal-close" onclick="closeModal('sceneEditModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="add-scene-form">
+                        <input type="text" id="newSceneEmoji" placeholder="表情" maxlength="2" style="width:60px">
+                        <input type="text" id="newSceneName" placeholder="场景名称" maxlength="10">
+                        <input type="text" id="newSceneSub" placeholder="副标题" maxlength="15">
+                        <button onclick="addCustomScene()">添加</button>
+                    </div>
+                    <div class="custom-scenes-list" id="customScenesList">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分享弹窗 -->
+        <div class="modal" id="shareModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🔗 分享给TA</h3>
+                    <button class="modal-close" onclick="closeModal('shareModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <p class="share-hint">复制下方数据发送给TA，TA可以导入同步：</p>
+                    <textarea id="shareDataText" readonly></textarea>
+                    <button class="btn-primary" onclick="copyShareData()">复制数据</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 提示消息 -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
